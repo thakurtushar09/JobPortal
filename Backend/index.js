@@ -1,7 +1,13 @@
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const connectDB = require("./config/db"); // Assuming you have a database connection setup
+import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import connectDB from "./utils/db.js"; 
+
+// Importing routes
+import userRoute from "./Routes/user.route.js";
+import companyRoute from "./Routes/company.route.js";
+import jobRoute from "./Routes/job.route.js";
+import applicationRoute from "./Routes/application.route.js";
 
 const app = express();
 
@@ -22,11 +28,6 @@ app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Handle preflight requests
 
 // Routes
-const userRoute = require("./routes/userRoute"); // Adjust paths as necessary
-const companyRoute = require("./routes/companyRoute");
-const jobRoute = require("./routes/jobRoute");
-const applicationRoute = require("./routes/applicationRoute");
-
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
