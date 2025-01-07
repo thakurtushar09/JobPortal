@@ -25,12 +25,27 @@ export const register = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({
+    const newUser = await User.create({
       fullName,
       email,
       phoneNumber,
       password: hashedPassword,
       role,
+    });
+
+    const tokenData = {
+      userId: newUser._id,
+    };
+
+    const token = await jwt.sign(tokenData, "skdskdfjgsgfss", {
+      expiresIn: "1d",
+    });
+
+    res.cookie("token", token, {
+      maxAge: 1 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
     });
 
     return res.status(200).json({
@@ -44,7 +59,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email, password, role } = req.body; // Fixed typo here
+    const { email, password, role } = req.body; 
     if (!email || !password || !role) {
       return res.status(400).json({
         message: "Something is missing",
@@ -70,7 +85,6 @@ export const login = async (req, res) => {
     }
 
     if (role !== user.role) {
-      // Use strict inequality
       return res.status(400).json({
         message: "Account does not exist with current role",
         success: false,
@@ -84,25 +98,26 @@ export const login = async (req, res) => {
     const token = await jwt.sign(tokenData, "skdskdfjgsgfss", {
       expiresIn: "1d",
     });
-    return res
-      .status(200)
-      .cookie("token", token, {
-        maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        sameSite: "strict",
-      })
-      .json({
-        message: `Welcome back ${user.fullName}`,
-        user: {
-          _id: user._id,
-          fullName: user.fullName,
-          email: user.email,
-          role: user.role,
-          phoneNumber: user.phoneNumber,
-          profile: user.profile,
-        },
-        success: true,
-      });
+
+    res.cookie("token", token, {
+      maxAge: 1 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    return res.status(200).json({
+      message: `Welcome back ${user.fullName}`,
+      user: {
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        phoneNumber: user.phoneNumber,
+        profile: user.profile,
+      },
+      success: true,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({

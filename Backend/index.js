@@ -2,18 +2,14 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./utils/db.js"; 
-
 // Importing routes
 import userRoute from "./Routes/user.route.js";
 import companyRoute from "./Routes/company.route.js";
 import jobRoute from "./Routes/job.route.js";
 import applicationRoute from "./Routes/application.route.js";
-
 const app = express();
-
 // Connect to DB
 connectDB();
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
