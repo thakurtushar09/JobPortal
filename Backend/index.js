@@ -2,23 +2,29 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./utils/db.js"; 
+
 // Importing routes
 import userRoute from "./Routes/user.route.js";
 import companyRoute from "./Routes/company.route.js";
 import jobRoute from "./Routes/job.route.js";
 import applicationRoute from "./Routes/application.route.js";
+
 const app = express();
+
 // Connect to DB
 connectDB();
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// CORS configuration
+// Allow CORS for everyone
 const corsOptions = {
-  origin: "http://localhost:5173", // Your frontend origin
-  credentials: true, // Allow credentials
+  origin: "*",  // Allow all origins
+  credentials: true, 
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "Content-Type,Authorization",
 };
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions)); // Handle preflight requests
