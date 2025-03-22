@@ -1,0 +1,26 @@
+# Ignore environment files
+/Backend/.env
+
+# Ignore constants.js in frontend
+Frontend/src/utils/constant.js
+
+# Node.js dependencies
+node_modules/
+
+# Python dependencies
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs
+logs/
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore build files
+dist/
+build/
